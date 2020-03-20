@@ -159,7 +159,7 @@ def top_words(words, max_features, min_df, max_df):
 
 # Separating out the good movies from the bad and finding the most frequently used words.
 
-screenplays_cut.head()
+# screenplays_cut.head()
 
 # Creating dataframes for good and bad movies, then getting the top words.
 good_movies_nostop = screenplays_cut[
@@ -203,23 +203,23 @@ for wordpair in good_not_bad:
 
 # Using image masks found from http://www.clker.com/.
 
-thumbs_down_mask = np.array(Image.open('images/thumbs-dwn-icon-black-th.svg.hi.png'))
-thumbs_up_mask = np.array(Image.open('images/thumbs-up-icon-black-hi.png'))
+# thumbs_down_mask = np.array(Image.open('images/thumbs-dwn-icon-black-th.svg.hi.png'))
+# thumbs_up_mask = np.array(Image.open('images/thumbs-up-icon-black-hi.png'))
 
-wordcloud = WordCloud(width=800, height=800, 
-                      min_font_size=10,
-                      background_color='white',
-                      collocations=False,
-                      mask=thumbs_up_mask,
-                      contour_width=1,
-                      contour_color='yellow').generate(good_string)
+# wordcloud = WordCloud(width=800, height=800, 
+#                       min_font_size=10,
+#                       background_color='white',
+#                       collocations=False,
+#                       mask=thumbs_up_mask,
+#                       contour_width=1,
+#                       contour_color='yellow').generate(good_string)
 
-plt.figure(figsize=(8, 8), facecolor=None)
-plt.imshow(wordcloud)
-plt.axis('off')
-plt.tight_layout(pad=0)
-plt.savefig('images/good_cloud.png')
-plt.show()
+# plt.figure(figsize=(8, 8), facecolor=None)
+# plt.imshow(wordcloud)
+# plt.axis('off')
+# plt.tight_layout(pad=0)
+# plt.savefig('images/good_cloud.png')
+# plt.show()
 
 # Same code used for the thumbs down word cloud for the bad films.
 
@@ -231,20 +231,20 @@ for wordpair in bad_not_good:
     word_rep = (wordpair[0] + ' the ')*int(mul)
     bad_string += word_rep
 
-wordcloud = WordCloud(width=800, height=800, 
-                      min_font_size=10,
-                      background_color='white',
-                      collocations=False,
-                      mask=thumbs_down_mask,
-                      contour_width=1,
-                      contour_color='yellow').generate(bad_string)
+# wordcloud = WordCloud(width=800, height=800, 
+#                       min_font_size=10,
+#                       background_color='white',
+#                       collocations=False,
+#                       mask=thumbs_down_mask,
+#                       contour_width=1,
+#                       contour_color='yellow').generate(bad_string)
 
-plt.figure(figsize=(8, 8), facecolor=None)
-plt.imshow(wordcloud)
-plt.axis('off')
-plt.tight_layout(pad=0)
-plt.savefig('images/bad_cloud.png')
-plt.show()
+# plt.figure(figsize=(8, 8), facecolor=None)
+# plt.imshow(wordcloud)
+# plt.axis('off')
+# plt.tight_layout(pad=0)
+# plt.savefig('images/bad_cloud.png')
+# plt.show()
 
 # Some definite patterns emerge.
 
@@ -333,8 +333,8 @@ clf.fit(X2, y_train)
 columns = tfidf.get_feature_names()
 
 # Printing and plotting.
-print(pd.Series(clf.feature_importances_,
-              index=columns).sort_values(ascending=False).head(15))
+# print(pd.Series(clf.feature_importances_,
+#               index=columns).sort_values(ascending=False).head(15))
 df_importance = pd.Series(clf.feature_importances_, 
                           index=columns)
 df_importance = df_importance.sort_values(ascending=True).tail(60)
@@ -342,7 +342,7 @@ df_importance = df_importance.sort_values(ascending=True).tail(60)
 # plt.title('Most Important Features')
 # plt.ylabel('Feature Name')
 # plt.xlabel('Feature Importance')
-plt.show()
+# plt.show()
 
 # Once I have the impoirtant features, I'll sort them and marry them up to a correlation matrix so that I can show how much the goood and bad movies are correlated to each top feature (word).
 
@@ -385,15 +385,15 @@ features_for_graph = pd.DataFrame.from_dict(features_for_graph)
 
 # Test graphic
 
-data = go.Bar(x=bad_corr, y=bad_corr.index, orientation='h', 
-              marker={'color':'rgba(250, 250, 0, .5)',
-                                 'line':{'color':'rgba(0,0,0,1)',
-                                         'width':1}})
-layout = go.Layout(width=400, height=600, yaxis={'autorange':"reversed"})
+# data = go.Bar(x=bad_corr, y=bad_corr.index, orientation='h', 
+#               marker={'color':'rgba(250, 250, 0, .5)',
+#                                  'line':{'color':'rgba(0,0,0,1)',
+#                                          'width':1}})
+# layout = go.Layout(width=400, height=600, yaxis={'autorange':"reversed"})
 
-fig = go.Figure(data, layout)
+# fig = go.Figure(data, layout)
 
-fig.show()
+# fig.show()
 
 # Creating the bar charts that will show the top 25 words of their respective type.
 
@@ -438,7 +438,7 @@ feature_color_dicts = {'df_importance': 'rgba(250, 250, 0, .5)',
                        'good_corr': 'rgba(35,220,90,.75)',
                        'bad_corr': 'rgba(35,0,75,.5)'}
 
-type(good_corr)
+# type(good_corr)
 
 ## Unsupervised Category Predictions
 
