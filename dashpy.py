@@ -103,135 +103,135 @@ def insert_hists(POS_label, title):
     
     return dcc.Graph(figure=fig)
 
-# def top_words(words, max_features, min_df, max_df):
-#     """Takes in a series of documents and returns an ordered list of 
-#     how frequently words appear as calculated by sum vs count.
+def top_words(words, max_features, min_df, max_df):
+    """Takes in a series of documents and returns an ordered list of 
+    how frequently words appear as calculated by sum vs count.
     
-#     Parameters:
+    Parameters:
     
-#         words: Series
-#             A series of documents with words to be counted.
+        words: Series
+            A series of documents with words to be counted.
             
-#         max_features: int
-#             Populates max_features value in vectorizer. Ceiling for how many
-#             words to use.
+        max_features: int
+            Populates max_features value in vectorizer. Ceiling for how many
+            words to use.
             
-#         min_df: float or int
-#             Populates min_df value in vectorizer. Minimum documents a word
-#             must appear in to be counted.
+        min_df: float or int
+            Populates min_df value in vectorizer. Minimum documents a word
+            must appear in to be counted.
             
-#         max_df: float or int
-#             Populates max_df value in vectorizer. Maximum documents a word
-#             must appear in to be counted.
+        max_df: float or int
+            Populates max_df value in vectorizer. Maximum documents a word
+            must appear in to be counted.
         
-#     returns: 
-#         List of tuples with word and ratio calculated by sum / count:
-#         (word, ratio), sorted by ratio."""
+    returns: 
+        List of tuples with word and ratio calculated by sum / count:
+        (word, ratio), sorted by ratio."""
     
-#     # Initialize vectorizor and fit
-#     victor = CountVectorizer(max_features=max_features, 
-#                              min_df=min_df, max_df=max_df)
-#     movies_victor = victor.fit_transform(words)
+    # Initialize vectorizor and fit
+    victor = CountVectorizer(max_features=max_features, 
+                             min_df=min_df, max_df=max_df)
+    movies_victor = victor.fit_transform(words)
     
-#     # Transform into SparceDataFrame.
-#     sdf = pd.SparseDataFrame(movies_victor, 
-#                                      columns=victor.get_feature_names())
+    # Transform into SparceDataFrame.
+    sdf = pd.SparseDataFrame(movies_victor, 
+                                     columns=victor.get_feature_names())
     
-#     sdf.fillna(0, inplace=True)
+    sdf.fillna(0, inplace=True)
     
-#     # Ave_word_count will house the tuples data to be sorted.
-#     ave_word_count = []
-#     for col in sdf.columns:
-#         key = col
+    # Ave_word_count will house the tuples data to be sorted.
+    ave_word_count = []
+    for col in sdf.columns:
+        key = col
         
-#         # Calculate the ratio and add tuple to list.
-#         value = sum(sdf[col]) / len(sdf[col])
-#         ave_word_count.append((key, value))
+        # Calculate the ratio and add tuple to list.
+        value = sum(sdf[col]) / len(sdf[col])
+        ave_word_count.append((key, value))
         
-#     # Return sorted tuple with word and ratio.
-#     return sorted(ave_word_count, key=lambda x: x[1], reverse=True)
+    # Return sorted tuple with word and ratio.
+    return sorted(ave_word_count, key=lambda x: x[1], reverse=True)
 
 
 
-# # Visuals
+# Visuals
 
-# # These visuals will be assembled for the purpose of the project dashboard, which will be run on an html page, ultimately to be hosted publicly. 
+# These visuals will be assembled for the purpose of the project dashboard, which will be run on an html page, ultimately to be hosted publicly. 
 
-# ## Word Clouds
+## Word Clouds
 
-# # Separating out the good movies from the bad and finding the most frequently used words.
+# Separating out the good movies from the bad and finding the most frequently used words.
 
-# # screenplays_cut.head()
+# screenplays_cut.head()
 
-# # Creating dataframes for good and bad movies, then getting the top words.
-# good_movies_nostop = screenplays_cut[
-#     screenplays_cut.good_or_bad == 1]['no_stop']
+# Creating dataframes for good and bad movies, then getting the top words.
+good_movies_nostop = screenplays_cut[
+    screenplays_cut.good_or_bad == 1]['no_stop']
 
-# good_top_words = top_words(words=good_movies_nostop, max_features=5000, 
-#           min_df=.2, max_df=1.0)
+good_top_words = top_words(words=good_movies_nostop, max_features=5000, 
+          min_df=.2, max_df=1.0)
 
-# bad_movies_nostop = screenplays_cut[
-#     screenplays_cut.good_or_bad == 0]['no_stop']
+bad_movies_nostop = screenplays_cut[
+    screenplays_cut.good_or_bad == 0]['no_stop']
 
-# bad_top_words = top_words(words=bad_movies_nostop, max_features=5000, 
-#           min_df=.2, max_df=1.0)
+bad_top_words = top_words(words=bad_movies_nostop, max_features=5000, 
+          min_df=.2, max_df=1.0)
 
-# # Creating list to separate words from tuples
-# just_bad_words = [wordpair[0] for wordpair in bad_top_words]
+# Creating list to separate words from tuples
+just_bad_words = [wordpair[0] for wordpair in bad_top_words]
 
-# good_not_bad = [(wordpair[0], wordpair[1]) for wordpair in good_top_words
-#                 if wordpair[0] not in just_bad_words]
+good_not_bad = [(wordpair[0], wordpair[1]) for wordpair in good_top_words
+                if wordpair[0] not in just_bad_words]
 
-# good_not_bad
+good_not_bad
 
-# # I'm going to get the top words from bad and good that are exclusive from the other side. So, only the top good words than are not in the bad films, and for the bad film list, only the top words that are not in the good film list.
+# I'm going to get the top words from bad and good that are exclusive from the other side. So, only the top good words than are not in the bad films, and for the bad film list, only the top words that are not in the good film list.
 
-# # Creating list to separate words from tuples
-# just_good_words = [wordpair[0] for wordpair in good_top_words]
+# Creating list to separate words from tuples
+just_good_words = [wordpair[0] for wordpair in good_top_words]
 
-# bad_not_good = [(wordpair[0], wordpair[1]) for wordpair in bad_top_words
-#                 if wordpair[0] not in just_good_words]
+bad_not_good = [(wordpair[0], wordpair[1]) for wordpair in bad_top_words
+                if wordpair[0] not in just_good_words]
 
-# bad_not_good
+bad_not_good
 
-# # To get this information into a word cloud, I'm actually going to de-tokenize the words and put them all in a string.
+# To get this information into a word cloud, I'm actually going to de-tokenize the words and put them all in a string.
 
-# good_string = ''
+good_string = ''
 
-# for wordpair in good_not_bad:
-#     mul = wordpair[1] * 20
-#     word_rep = (wordpair[0] + ' the ')*int(mul)
-#     good_string += word_rep
+for wordpair in good_not_bad:
+    mul = wordpair[1] * 20
+    word_rep = (wordpair[0] + ' the ')*int(mul)
+    good_string += word_rep
 
-# # Using image masks found from http://www.clker.com/.
+# Using image masks found from http://www.clker.com/.
 
-# # thumbs_down_mask = np.array(Image.open('images/thumbs-dwn-icon-black-th.svg.hi.png'))
-# # thumbs_up_mask = np.array(Image.open('images/thumbs-up-icon-black-hi.png'))
+# thumbs_down_mask = np.array(Image.open('images/thumbs-dwn-icon-black-th.svg.hi.png'))
+# thumbs_up_mask = np.array(Image.open('images/thumbs-up-icon-black-hi.png'))
 
-# # wordcloud = WordCloud(width=800, height=800, 
-# #                       min_font_size=10,
-# #                       background_color='white',
-# #                       collocations=False,
-# #                       mask=thumbs_up_mask,
-# #                       contour_width=1,
-# #                       contour_color='yellow').generate(good_string)
+# wordcloud = WordCloud(width=800, height=800, 
+#                       min_font_size=10,
+#                       background_color='white',
+#                       collocations=False,
+#                       mask=thumbs_up_mask,
+#                       contour_width=1,
+#                       contour_color='yellow').generate(good_string)
 
-# # plt.figure(figsize=(8, 8), facecolor=None)
-# # plt.imshow(wordcloud)
-# # plt.axis('off')
-# # plt.tight_layout(pad=0)
-# # plt.savefig('images/good_cloud.png')
-# # plt.show()
+# plt.figure(figsize=(8, 8), facecolor=None)
+# plt.imshow(wordcloud)
+# plt.axis('off')
+# plt.tight_layout(pad=0)
+# plt.savefig('images/good_cloud.png')
+# plt.show()
 
-# # Same code used for the thumbs down word cloud for the bad films.
+# Same code used for the thumbs down word cloud for the bad films.
 
-# bad_string = ''
+bad_string = ''
 
-# for wordpair in bad_not_good:
-#     # 20 is an arbitrary number; just need something to break them apart.
-#     mul = wordpair[1] * 20
-#     word_rep = (wordpair[0] + ' the ')*int(mul)
-#     bad_string += word_rep
+for wordpair in bad_not_good:
+    # 20 is an arbitrary number; just need something to break them apart.
+    mul = wordpair[1] * 20
+    word_rep = (wordpair[0] + ' the ')*int(mul)
+    bad_string += word_rep
 
 # wordcloud = WordCloud(width=800, height=800, 
 #                       min_font_size=10,
@@ -638,14 +638,12 @@ final_text = """Hopefully you've found this display informative, and have
 
 thanks = """Thanks!"""
 
-
-
 ## Main Dash Code
 
 # This is the skeleton for the web page for the dashboard. Interactions will be managed by callbacks, and styles will be managed by a separate style sheet: main.css in the assets folder.
 
 # app = JupyterDash('POS_histogram')
-app = dash.Dash()
+app = dash.Dash(__name__)
 server = app.server
 
 # Reading in the files for the word cloud images.
@@ -690,7 +688,22 @@ app.layout = html.Div(children=[
                 ]),
             
             # This is where the word clouds will go.
-                     
+            html.Div(className='thumbBoxLeft',
+                     children=[
+                html.Img(className='thumbs',
+                     src='data:image/png;base64,{}'.format(encoded_good_cloud)
+                     ),
+                html.Div(className='thumbDesc',
+                    children=['The Good']),
+                 ]),
+            html.Div(className='thumbBoxRight',
+                     children=[
+                html.Div(className='thumbDesc',
+                          children=['The Bad']),
+                html.Img(className='thumbs',
+                         src='data:image/png;base64,{}'.format(encoded_bad_cloud)
+                        )
+                 ]),
             html.Div(
                 className='textBlock',
                 children=[
@@ -737,10 +750,28 @@ app.layout = html.Div(children=[
                 ]),
                      
             # This is where the bar charts for temp importance will go.
+            html.H3('Word Importance'),
+            dcc.RadioItems(
+                id='feature_radio',
+                options=feature_selector_dicts,
+                value='df_importance'),
+            dcc.Graph(
+                id='feature_graph'),
+            html.P(
+                className='sidebar',
+                children=[importance_text]),
                      
             # This is where we will show the LDA category information.
             html.H3('Unsupervised Category Creation'),
-                     
+            html.Div(
+                id='cat_div',
+                children=[
+                    dcc.Dropdown(id='cat_drop',
+                                 options=lda_cats,
+                                 value=0),
+                    html.Div(id='cat_box'),
+                    html.Div(id='cat_box_2'),
+                ]),
             html.P(className='sidebar',
                    children=[category_text_dot5]),
             html.P(className='sidebar',
@@ -849,82 +880,82 @@ def insert_hist(POS_label):
 # This will create the important word bar graph that will toggle between most important words overall, good film word correlation, and bad film word correlation.
 
 #Callback and function for feature bar graph and radio buttons.
-# @app.callback(Output(component_id='feature_graph', 
-#                      component_property='figure'),
-#               [Input(component_id='feature_radio',
-#                      component_property='value')])
-# def insert_feature(radio_label):
-#     bar_data = [
-#         go.Bar(
-#             x=feature_selector_data[radio_label], 
-#             y=feature_selector_data[radio_label].index, 
-#             orientation='h', 
-#             marker={'color': feature_color_dicts[radio_label],
-#                      'line':{'color':'rgba(150,10,10,1)',
-#                              'width':1}})]
-#     toggle={'df_importance':'Important Overall',
-#             'good_corr':'Awesome Films',
-#             'bad_corr':'Awful Films'}
+@app.callback(Output(component_id='feature_graph', 
+                     component_property='figure'),
+              [Input(component_id='feature_radio',
+                     component_property='value')])
+def insert_feature(radio_label):
+    bar_data = [
+        go.Bar(
+            x=feature_selector_data[radio_label], 
+            y=feature_selector_data[radio_label].index, 
+            orientation='h', 
+            marker={'color': feature_color_dicts[radio_label],
+                     'line':{'color':'rgba(150,10,10,1)',
+                             'width':1}})]
+    toggle={'df_importance':'Important Overall',
+            'good_corr':'Awesome Films',
+            'bad_corr':'Awful Films'}
     
-#     imp_corr = 'Importance' if radio_label == 'df_importance' else 'Correlation'
+    imp_corr = 'Importance' if radio_label == 'df_importance' else 'Correlation'
 
-#     bar_layout = go.Layout(width=400, height=700, 
-#                            title=toggle[radio_label],
-#                            xaxis={'title':imp_corr},
-#                            yaxis={'autorange':"reversed",
-#                                   'title':'Significant Terms'})
+    bar_layout = go.Layout(width=400, height=700, 
+                           title=toggle[radio_label],
+                           xaxis={'title':imp_corr},
+                           yaxis={'autorange':"reversed",
+                                  'title':'Significant Terms'})
 
-#     return {'data':bar_data, 'layout':bar_layout}
+    return {'data':bar_data, 'layout':bar_layout}
 
 # This will create the box for displaying titles associated with the categories created using LDA.
 
 # Callback and function for movies grouped by LDA categories.
-# @app.callback(Output(component_id='cat_box', 
-#                      component_property='children'),
-#               [Input(component_id='cat_drop',
-#                      component_property='value')])
-# def insert_titles(cat_id):
+@app.callback(Output(component_id='cat_box', 
+                     component_property='children'),
+              [Input(component_id='cat_drop',
+                     component_property='value')])
+def insert_titles(cat_id):
     
-#     movie_list = combined_df[combined_df.category == cat_id]['titles']
+    movie_list = combined_df[combined_df.category == cat_id]['titles']
     
-#     formatted_titles = []
+    formatted_titles = []
     
-#     # Formatting the titles to look better than the dash format I've been using.
-#     for title in movie_list:
-#         temp = title.title().replace('-', ' ')
-#         if title[-4:] == '-the':
-#             temp = 'The ' + temp[:-4]
+    # Formatting the titles to look better than the dash format I've been using.
+    for title in movie_list:
+        temp = title.title().replace('-', ' ')
+        if title[-4:] == '-the':
+            temp = 'The ' + temp[:-4]
         
-#         formatted_titles.append(temp)
+        formatted_titles.append(temp)
     
-#     # Inserting a line break in every other line.
-#     for i in range(len(formatted_titles)):
-#         formatted_titles.insert(i*2, html.Br())
+    # Inserting a line break in every other line.
+    for i in range(len(formatted_titles)):
+        formatted_titles.insert(i*2, html.Br())
     
-#     # The below is to remove the initial line break that appears to to i*0
-#     formatted_titles.pop(0)
+    # The below is to remove the initial line break that appears to to i*0
+    formatted_titles.pop(0)
     
-#     return formatted_titles
+    return formatted_titles
 
 # This is a separate function for adding in the categories themselves.
 
 # Callback for the LDA categories themselves.
-# @app.callback(Output(component_id='cat_box_2',
-#                      component_property='children'),
-#              [Input(component_id='cat_drop',
-#                     component_property='value')])
-# def insert_cats(cat_id):
+@app.callback(Output(component_id='cat_box_2',
+                     component_property='children'),
+             [Input(component_id='cat_drop',
+                    component_property='value')])
+def insert_cats(cat_id):
     
-#     these_cats = list(cat_word_df[str(cat_id)])
+    these_cats = list(cat_word_df[str(cat_id)])
     
-#     for i in range(len(these_cats)):
-#         these_cats.insert(i*2, html.Br())   
+    for i in range(len(these_cats)):
+        these_cats.insert(i*2, html.Br())   
 
-#     these_cats.insert(0, html.Br())
-#     these_cats.insert(0, 'Most Significant Words')
-#     these_cats.insert(0, html.Br())
+    these_cats.insert(0, html.Br())
+    these_cats.insert(0, 'Most Significant Words')
+    these_cats.insert(0, html.Br())
     
-#     return these_cats
+    return these_cats
 
 # Running the dash.
 
