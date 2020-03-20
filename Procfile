@@ -1,1 +1,1 @@
-web: gunicorn dashpy:app
+web: gunicorn dashpy:server
