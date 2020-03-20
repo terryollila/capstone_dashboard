@@ -946,4 +946,5 @@ def insert_cats(cat_id):
 # Running the dash.
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    # app.run_server(debug=False)
+    app.run_server()
