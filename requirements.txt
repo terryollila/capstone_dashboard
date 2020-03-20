@@ -7,7 +7,6 @@ plotly
 seaborn
 pandas
 numpy
-ast
 sklearn
 imblearn
 mlxtend
