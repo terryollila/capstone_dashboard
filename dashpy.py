@@ -630,7 +630,7 @@ thanks = """Thanks!"""
 
 # app = JupyterDash('POS_histogram')
 app = dash.Dash()
-server = app.server
+server = app:server
 
 # Reading in the files for the word cloud images.
 image_filename = 'images/good_cloud.png'
