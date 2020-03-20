@@ -1,1 +1,1 @@
-web: gunicorn dashpy:server
+web: gunicorn dashpy:server --preload
