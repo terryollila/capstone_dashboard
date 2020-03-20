@@ -14,3 +14,4 @@ xgboost
 dash
 wordcloud
 jupyter_plotly_dash
+gunicorn
