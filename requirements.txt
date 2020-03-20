@@ -1,3 +1,4 @@
+matplotlib
 plotly
 dash
 dash_core_components
@@ -6,7 +7,6 @@ plotly
 seaborn
 pandas
 numpy
-base64
 inspect
 ast
 sklearn
