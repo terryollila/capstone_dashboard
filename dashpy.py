@@ -151,6 +151,8 @@ def top_words(words, max_features, min_df, max_df):
     # Return sorted tuple with word and ratio.
     return sorted(ave_word_count, key=lambda x: x[1], reverse=True)
 
+
+
 # Visuals
 
 # These visuals will be assembled for the purpose of the project dashboard, which will be run on an html page, ultimately to be hosted publicly. 
@@ -309,52 +311,62 @@ POS_hist_selector_list
 # The usual classification setup. I won't need test sets since all I'm looking
 # for is the feature importance, and not the actual scoring or predictions.
 
-X_train = screenplays_cut.no_stop
-y_train = screenplays_cut.good_or_bad
+# X_train = screenplays_cut.no_stop
+# y_train = screenplays_cut.good_or_bad
 
-# This will be the TFIDF version of the classification, since it was the most
-# accurate.
-tfidf = TfidfVectorizer(max_df=.95, min_df=.1, max_features=5000,
-                         ngram_range=(1,2))
-X2 = tfidf.fit_transform(X_train)
+# # This will be the TFIDF version of the classification, since it was the most
+# # accurate.
+# tfidf = TfidfVectorizer(max_df=.95, min_df=.1, max_features=5000,
+#                          ngram_range=(1,2))
+# X2 = tfidf.fit_transform(X_train)
 
-# There a few more bad scripts than good ones, so I'll make them even.
-rus = RandomUnderSampler(random_state=42)
-X_resampled, y_resampled = rus.fit_resample(pd.DataFrame(X2), y_train)
+# # There a few more bad scripts than good ones, so I'll make them even.
+# rus = RandomUnderSampler(random_state=42)
+# X_resampled, y_resampled = rus.fit_resample(pd.DataFrame(X2), y_train)
 
-clf = XGBClassifier(max_depth=8,
-                    criterion='entropy',
-                    min_samples_split=14,
-                    min_samples_leaf=1,
-                    max_features=160)
+# clf = XGBClassifier(max_depth=8,
+#                     criterion='entropy',
+#                     min_samples_split=14,
+#                     min_samples_leaf=1,
+#                     max_features=160)
 
-clf.fit(X2, y_train)
+# clf.fit(X2, y_train)
 
-columns = tfidf.get_feature_names()
+# columns = tfidf.get_feature_names()
 
 # Printing and plotting.
 # print(pd.Series(clf.feature_importances_,
 #               index=columns).sort_values(ascending=False).head(15))
-df_importance = pd.Series(clf.feature_importances_, 
-                          index=columns)
-df_importance = df_importance.sort_values(ascending=True).tail(60)
-# df_importance.plot(kind='barh', figsize=(8,15))
-# plt.title('Most Important Features')
-# plt.ylabel('Feature Name')
-# plt.xlabel('Feature Importance')
-# plt.show()
 
-# Once I have the impoirtant features, I'll sort them and marry them up to a correlation matrix so that I can show how much the goood and bad movies are correlated to each top feature (word).
 
-df_importance.sort_values(ascending=False, inplace=True)
+# df_importance = pd.Series(clf.feature_importances_, 
+#                           index=columns)
+# df_importance = pd.DataFrame(df_importance)
+# df_importance.to_csv('df_importance.csv')
+df_importance = pd.read_csv('df_importance.csv', index_col=0)
+df_importance = df_importance['0']
 
-important_df = pd.SparseDataFrame(X2, columns=tfidf.get_feature_names(),
-                               default_fill_value=0 )
 
-important_df = important_df[list(df_importance.index)]
-important_df['good_or_bad'] = y_train
+# # df_importance.plot(kind='barh', figsize=(8,15))
+# # plt.title('Most Important Features')
+# # plt.ylabel('Feature Name')
+# # plt.xlabel('Feature Importance')
+# # plt.show()
 
-important_corr = important_df.corr()
+# # Once I have the impoirtant features, I'll sort them and marry them up to a correlation matrix so that I can show how much the goood and bad movies are correlated to each top feature (word).
+
+# df_importance.sort_values(ascending=False, inplace=True)
+
+# important_df = pd.SparseDataFrame(X2, columns=tfidf.get_feature_names(),
+#                                default_fill_value=0 )
+
+# important_df = important_df[list(df_importance.index)]
+# important_df['good_or_bad'] = y_train
+
+# important_corr = important_df.corr()
+
+# important_corr.to_csv('important_corr.csv')
+important_corr = pd.read_csv('important_corr.csv', index_col=0)
 
 # I have to get rid of the rating column itself since it's not part of the 
 # actual word list.
@@ -465,6 +477,8 @@ for col in cat_word_df.columns:
     cat_word_df[col] = cat_word_df[col].str.replace('fuck', 'f**k')
     cat_word_df[col] = cat_word_df[col].str.replace('bitch', 'b**ch')
     cat_word_df[col] = cat_word_df[col].str.replace('ass', 'a**')
+
+
 
 ## Dashboard Text
 
@@ -630,7 +644,7 @@ thanks = """Thanks!"""
 
 # app = JupyterDash('POS_histogram')
 app = dash.Dash()
-server = app:server
+server = app.server
 
 # Reading in the files for the word cloud images.
 image_filename = 'images/good_cloud.png'
@@ -947,5 +961,4 @@ def insert_cats(cat_id):
 
 if __name__ == '__main__':
     # app.run_server(debug=False)
-    # app.run_server()
-    app.run()
+    app.run_server()
