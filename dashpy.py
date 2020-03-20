@@ -161,8 +161,6 @@ def top_words(words, max_features, min_df, max_df):
 
 # Separating out the good movies from the bad and finding the most frequently used words.
 
-# screenplays_cut.head()
-
 # Creating dataframes for good and bad movies, then getting the top words.
 good_movies_nostop = screenplays_cut[
     screenplays_cut.good_or_bad == 1]['no_stop']
@@ -203,26 +201,6 @@ for wordpair in good_not_bad:
     word_rep = (wordpair[0] + ' the ')*int(mul)
     good_string += word_rep
 
-# Using image masks found from http://www.clker.com/.
-
-# thumbs_down_mask = np.array(Image.open('images/thumbs-dwn-icon-black-th.svg.hi.png'))
-# thumbs_up_mask = np.array(Image.open('images/thumbs-up-icon-black-hi.png'))
-
-# wordcloud = WordCloud(width=800, height=800, 
-#                       min_font_size=10,
-#                       background_color='white',
-#                       collocations=False,
-#                       mask=thumbs_up_mask,
-#                       contour_width=1,
-#                       contour_color='yellow').generate(good_string)
-
-# plt.figure(figsize=(8, 8), facecolor=None)
-# plt.imshow(wordcloud)
-# plt.axis('off')
-# plt.tight_layout(pad=0)
-# plt.savefig('images/good_cloud.png')
-# plt.show()
-
 # Same code used for the thumbs down word cloud for the bad films.
 
 bad_string = ''
@@ -232,25 +210,6 @@ for wordpair in bad_not_good:
     mul = wordpair[1] * 20
     word_rep = (wordpair[0] + ' the ')*int(mul)
     bad_string += word_rep
-
-# wordcloud = WordCloud(width=800, height=800, 
-#                       min_font_size=10,
-#                       background_color='white',
-#                       collocations=False,
-#                       mask=thumbs_down_mask,
-#                       contour_width=1,
-#                       contour_color='yellow').generate(bad_string)
-
-# plt.figure(figsize=(8, 8), facecolor=None)
-# plt.imshow(wordcloud)
-# plt.axis('off')
-# plt.tight_layout(pad=0)
-# plt.savefig('images/bad_cloud.png')
-# plt.show()
-
-# Some definite patterns emerge.
-
-# Dashboard
 
 ## POS Histogram
 
@@ -343,8 +302,9 @@ POS_hist_selector_list
 #                           index=columns)
 # df_importance = pd.DataFrame(df_importance)
 # df_importance.to_csv('df_importance.csv')
+
 df_importance = pd.read_csv('df_importance.csv', index_col=0)
-df_importance = df_importance['0']
+df_importance = df_importance['0'].copy()
 
 
 # # df_importance.plot(kind='barh', figsize=(8,15))
@@ -355,7 +315,7 @@ df_importance = df_importance['0']
 
 # # Once I have the impoirtant features, I'll sort them and marry them up to a correlation matrix so that I can show how much the goood and bad movies are correlated to each top feature (word).
 
-# df_importance.sort_values(ascending=False, inplace=True)
+df_importance.sort_values(ascending=False, inplace=True)
 
 # important_df = pd.SparseDataFrame(X2, columns=tfidf.get_feature_names(),
 #                                default_fill_value=0 )
