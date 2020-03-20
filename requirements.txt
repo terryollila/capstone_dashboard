@@ -13,7 +13,6 @@ mlxtend
 xgboost
 dash
 wordcloud
-PIL
 os
 jupyter_plotly_dash
 importlib
