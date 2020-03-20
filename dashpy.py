@@ -28,7 +28,7 @@ from os import path
 from jupyter_plotly_dash import JupyterDash
 from importlib import reload
 
-import functions as fun
+# import functions as fun
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
