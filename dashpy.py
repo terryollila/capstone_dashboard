@@ -103,6 +103,54 @@ def insert_hists(POS_label, title):
     
     return dcc.Graph(figure=fig)
 
+def top_words(words, max_features, min_df, max_df):
+    """Takes in a series of documents and returns an ordered list of 
+    how frequently words appear as calculated by sum vs count.
+    
+    Parameters:
+    
+        words: Series
+            A series of documents with words to be counted.
+            
+        max_features: int
+            Populates max_features value in vectorizer. Ceiling for how many
+            words to use.
+            
+        min_df: float or int
+            Populates min_df value in vectorizer. Minimum documents a word
+            must appear in to be counted.
+            
+        max_df: float or int
+            Populates max_df value in vectorizer. Maximum documents a word
+            must appear in to be counted.
+        
+    returns: 
+        List of tuples with word and ratio calculated by sum / count:
+        (word, ratio), sorted by ratio."""
+    
+    # Initialize vectorizor and fit
+    victor = CountVectorizer(max_features=max_features, 
+                             min_df=min_df, max_df=max_df)
+    movies_victor = victor.fit_transform(words)
+    
+    # Transform into SparceDataFrame.
+    sdf = pd.SparseDataFrame(movies_victor, 
+                                     columns=victor.get_feature_names())
+    
+    sdf.fillna(0, inplace=True)
+    
+    # Ave_word_count will house the tuples data to be sorted.
+    ave_word_count = []
+    for col in sdf.columns:
+        key = col
+        
+        # Calculate the ratio and add tuple to list.
+        value = sum(sdf[col]) / len(sdf[col])
+        ave_word_count.append((key, value))
+        
+    # Return sorted tuple with word and ratio.
+    return sorted(ave_word_count, key=lambda x: x[1], reverse=True)
+
 # Visuals
 
 # These visuals will be assembled for the purpose of the project dashboard, which will be run on an html page, ultimately to be hosted publicly. 
@@ -117,13 +165,13 @@ screenplays_cut.head()
 good_movies_nostop = screenplays_cut[
     screenplays_cut.good_or_bad == 1]['no_stop']
 
-good_top_words = fun.top_words(words=good_movies_nostop, max_features=5000, 
+good_top_words = top_words(words=good_movies_nostop, max_features=5000, 
           min_df=.2, max_df=1.0)
 
 bad_movies_nostop = screenplays_cut[
     screenplays_cut.good_or_bad == 0]['no_stop']
 
-bad_top_words = fun.top_words(words=bad_movies_nostop, max_features=5000, 
+bad_top_words = top_words(words=bad_movies_nostop, max_features=5000, 
           min_df=.2, max_df=1.0)
 
 # Creating list to separate words from tuples
