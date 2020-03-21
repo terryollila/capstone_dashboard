@@ -103,53 +103,53 @@ def insert_hists(POS_label, title):
     
     return dcc.Graph(figure=fig)
 
-def top_words(words, max_features, min_df, max_df):
-    """Takes in a series of documents and returns an ordered list of 
-    how frequently words appear as calculated by sum vs count.
+# def top_words(words, max_features, min_df, max_df):
+#     """Takes in a series of documents and returns an ordered list of 
+#     how frequently words appear as calculated by sum vs count.
     
-    Parameters:
+#     Parameters:
     
-        words: Series
-            A series of documents with words to be counted.
+#         words: Series
+#             A series of documents with words to be counted.
             
-        max_features: int
-            Populates max_features value in vectorizer. Ceiling for how many
-            words to use.
+#         max_features: int
+#             Populates max_features value in vectorizer. Ceiling for how many
+#             words to use.
             
-        min_df: float or int
-            Populates min_df value in vectorizer. Minimum documents a word
-            must appear in to be counted.
+#         min_df: float or int
+#             Populates min_df value in vectorizer. Minimum documents a word
+#             must appear in to be counted.
             
-        max_df: float or int
-            Populates max_df value in vectorizer. Maximum documents a word
-            must appear in to be counted.
+#         max_df: float or int
+#             Populates max_df value in vectorizer. Maximum documents a word
+#             must appear in to be counted.
         
-    returns: 
-        List of tuples with word and ratio calculated by sum / count:
-        (word, ratio), sorted by ratio."""
+#     returns: 
+#         List of tuples with word and ratio calculated by sum / count:
+#         (word, ratio), sorted by ratio."""
     
-    # Initialize vectorizor and fit
-    victor = CountVectorizer(max_features=max_features, 
-                             min_df=min_df, max_df=max_df)
-    movies_victor = victor.fit_transform(words)
+#     # Initialize vectorizor and fit
+#     victor = CountVectorizer(max_features=max_features, 
+#                              min_df=min_df, max_df=max_df)
+#     movies_victor = victor.fit_transform(words)
     
-    # Transform into SparceDataFrame.
-    sdf = pd.SparseDataFrame(movies_victor, 
-                                     columns=victor.get_feature_names())
+#     # Transform into SparceDataFrame.
+#     sdf = pd.SparseDataFrame(movies_victor, 
+#                                      columns=victor.get_feature_names())
     
-    sdf.fillna(0, inplace=True)
+#     sdf.fillna(0, inplace=True)
     
-    # Ave_word_count will house the tuples data to be sorted.
-    ave_word_count = []
-    for col in sdf.columns:
-        key = col
+#     # Ave_word_count will house the tuples data to be sorted.
+#     ave_word_count = []
+#     for col in sdf.columns:
+#         key = col
         
-        # Calculate the ratio and add tuple to list.
-        value = sum(sdf[col]) / len(sdf[col])
-        ave_word_count.append((key, value))
+#         # Calculate the ratio and add tuple to list.
+#         value = sum(sdf[col]) / len(sdf[col])
+#         ave_word_count.append((key, value))
         
-    # Return sorted tuple with word and ratio.
-    return sorted(ave_word_count, key=lambda x: x[1], reverse=True)
+#     # Return sorted tuple with word and ratio.
+#     return sorted(ave_word_count, key=lambda x: x[1], reverse=True)
 
 
 
@@ -162,54 +162,54 @@ def top_words(words, max_features, min_df, max_df):
 # Separating out the good movies from the bad and finding the most frequently used words.
 
 # Creating dataframes for good and bad movies, then getting the top words.
-good_movies_nostop = screenplays_cut[
-    screenplays_cut.good_or_bad == 1]['no_stop']
+# good_movies_nostop = screenplays_cut[
+#     screenplays_cut.good_or_bad == 1]['no_stop']
 
-good_top_words = top_words(words=good_movies_nostop, max_features=5000, 
-          min_df=.2, max_df=1.0)
+# good_top_words = top_words(words=good_movies_nostop, max_features=5000, 
+#           min_df=.2, max_df=1.0)
 
-bad_movies_nostop = screenplays_cut[
-    screenplays_cut.good_or_bad == 0]['no_stop']
+# bad_movies_nostop = screenplays_cut[
+#     screenplays_cut.good_or_bad == 0]['no_stop']
 
-bad_top_words = top_words(words=bad_movies_nostop, max_features=5000, 
-          min_df=.2, max_df=1.0)
+# bad_top_words = top_words(words=bad_movies_nostop, max_features=5000, 
+#           min_df=.2, max_df=1.0)
 
-# Creating list to separate words from tuples
-just_bad_words = [wordpair[0] for wordpair in bad_top_words]
+# # Creating list to separate words from tuples
+# just_bad_words = [wordpair[0] for wordpair in bad_top_words]
 
-good_not_bad = [(wordpair[0], wordpair[1]) for wordpair in good_top_words
-                if wordpair[0] not in just_bad_words]
+# good_not_bad = [(wordpair[0], wordpair[1]) for wordpair in good_top_words
+#                 if wordpair[0] not in just_bad_words]
 
-good_not_bad
+# good_not_bad
 
-# I'm going to get the top words from bad and good that are exclusive from the other side. So, only the top good words than are not in the bad films, and for the bad film list, only the top words that are not in the good film list.
+# # I'm going to get the top words from bad and good that are exclusive from the other side. So, only the top good words than are not in the bad films, and for the bad film list, only the top words that are not in the good film list.
 
-# Creating list to separate words from tuples
-just_good_words = [wordpair[0] for wordpair in good_top_words]
+# # Creating list to separate words from tuples
+# just_good_words = [wordpair[0] for wordpair in good_top_words]
 
-bad_not_good = [(wordpair[0], wordpair[1]) for wordpair in bad_top_words
-                if wordpair[0] not in just_good_words]
+# bad_not_good = [(wordpair[0], wordpair[1]) for wordpair in bad_top_words
+#                 if wordpair[0] not in just_good_words]
 
-bad_not_good
+# bad_not_good
 
-# To get this information into a word cloud, I'm actually going to de-tokenize the words and put them all in a string.
+# # To get this information into a word cloud, I'm actually going to de-tokenize the words and put them all in a string.
 
-good_string = ''
+# good_string = ''
 
-for wordpair in good_not_bad:
-    mul = wordpair[1] * 20
-    word_rep = (wordpair[0] + ' the ')*int(mul)
-    good_string += word_rep
+# for wordpair in good_not_bad:
+#     mul = wordpair[1] * 20
+#     word_rep = (wordpair[0] + ' the ')*int(mul)
+#     good_string += word_rep
 
-# Same code used for the thumbs down word cloud for the bad films.
+# # Same code used for the thumbs down word cloud for the bad films.
 
-bad_string = ''
+# bad_string = ''
 
-for wordpair in bad_not_good:
-    # 20 is an arbitrary number; just need something to break them apart.
-    mul = wordpair[1] * 20
-    word_rep = (wordpair[0] + ' the ')*int(mul)
-    bad_string += word_rep
+# for wordpair in bad_not_good:
+#     # 20 is an arbitrary number; just need something to break them apart.
+#     mul = wordpair[1] * 20
+#     word_rep = (wordpair[0] + ' the ')*int(mul)
+#     bad_string += word_rep
 
 ## POS Histogram
 
